@@ -1,3 +1,7 @@
+<!--------------------------------->
+<!-- Main html page for Homepage -->
+<!--------------------------------->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -16,9 +20,10 @@
 </head>
 
 <body>
+    <!-- Backend script -->
     <script>
         function checkLoginState() {               // Called when a person is finished with the Login Button.
-            FB.getLoginStatus(function (res) {   // See the onlogin handler
+            FB.getLoginStatus(function (res) {     // See the onlogin handler
                 console.log(res);
                 $.ajax({
                     url: "/api/users/facebook/token",
@@ -47,6 +52,7 @@
             });
         };
     </script>
+
     <!-- Navbar -->
     <nav class="d-none d-md-block navbar-pc">
         <a id="home" href="./index.html"><i class="fa fa-home fa-lg"></i> DITHUB</a>
@@ -62,6 +68,7 @@
             </div>
         </div>
 
+        <!-- Links for each chapter of homepage -->
         <a id="forums" href="#forums_unit"><i class="fa fa-comments fa-lg" aria-hidden="true"></i> FORUM</a>
         <a id="ins" href="#ins_unit"><i class="fa fa-info fa-lg" aria-hidden="true"></i> ΟΔΗΓΙΕΣ</a>
         <a id="sites" href="#sites_unit"><i class="fa fa-globe fa-lg" aria-hidden="true"></i> ΧΡΗΣΙΜΑ SITES</a>
@@ -149,10 +156,12 @@
         </div>
     </div>
 
+    <!-- Description for each lesson of the first semister -->
     <div class="unit container" id="lessons_unit">
         <h3 class="titles">ΜΑΘΗΜΑΤΑ - Α' εξαμήνου 2020/21</h3>
         <br>
         <div class="accordion" id="lessons_accordion">
+            <!-- Introduction to Programming -->
             <div class="card">
                 <div class="card-header" id="ip" data-toggle="collapse" data-target="#ip_desc" aria-expanded="true"
                     aria-controls="collapseOne">
@@ -177,6 +186,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Discrete Mathematics -->
             <div class="card">
                 <div class="card-header" id="discrete" data-toggle="collapse" data-target="#discrete_desc"
                     aria-expanded="false" aria-controls="collapseTwo">
@@ -198,6 +208,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Linear Algebra -->
             <div class="card">
                 <div class="card-header" id="linear" data-toggle="collapse" data-target="#linear_desc"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -218,6 +229,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Logical Design -->
             <div class="card">
                 <div class="card-header" id="logic" data-toggle="collapse" data-target="#logic_desc"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -239,6 +251,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Logical Design (Lab) -->
             <div class="card">
                 <div class="card-header" id="logiclab" data-toggle="collapse" data-target="#logiclab_desc"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -260,6 +273,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Introduction to Computer Science and Telecommunications -->
             <div class="card">
                 <div class="card-header" id="intro" data-toggle="collapse" data-target="#intro_desc"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -286,10 +300,12 @@
         </div>
     </div>
 
+    <!-- Useful links for students -->
     <div class="unit container" id="sites_unit">
         <h3 class="titles">SITES</h3>
         <br>
         <div class="accordion" id="sites_accordion">
+            <!-- General -->
             <div class="card">
                 <div class="card-header" id="general" data-toggle="collapse" data-target="#general_desc"
                     aria-expanded="true" aria-controls="collapseOne">
@@ -367,6 +383,7 @@
                     </div>
                 </div>
             </div>
+            <!-- Social update for students -->
             <div class="card">
                 <div class="card-header" id="updating" data-toggle="collapse" data-target="#updating_desc"
                     aria-expanded="true" aria-controls="collapseOne">
@@ -405,6 +422,7 @@
                     </div>
                 </div>
             </div>
+            <!-- IP sites -->
             <div class="card">
                 <div class="card-header" id="ip" data-toggle="collapse" data-target="#ip_sites" aria-expanded="true"
                     aria-controls="collapseOne">
@@ -450,6 +468,7 @@
                     </div>
                 </div>
             </div>
+            <!-- DM sites -->
             <div class="card">
                 <div class="card-header" id="discrete" data-toggle="collapse" data-target="#discrete_sites"
                     aria-expanded="false" aria-controls="collapseTwo">
@@ -489,6 +508,7 @@
                     </div>
                 </div>
             </div>
+            <!-- LA sites -->
             <div class="card">
                 <div class="card-header" id="linear" data-toggle="collapse" data-target="#linear_sites"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -520,6 +540,7 @@
                     </div>
                 </div>
             </div>
+            <!-- LD sites -->
             <div class="card">
                 <div class="card-header" id="logic" data-toggle="collapse" data-target="#logic_sites"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -551,6 +572,7 @@
                     </div>
                 </div>
             </div>
+            <!-- LD (lab) sites -->
             <div class="card">
                 <div class="card-header" id="logiclab" data-toggle="collapse" data-target="#logiclab_sites"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -588,6 +610,7 @@
                     </div>
                 </div>
             </div>
+            <!-- ICT sites -->
             <div class="card">
                 <div class="card-header" id="intro" data-toggle="collapse" data-target="#intro_sites"
                     aria-expanded="false" aria-controls="collapseThree">
@@ -629,6 +652,8 @@
         </div>
     </div>
 
+    <!-- Instructions -->
+    <!-- They create at the moment with backend -->
     <div class="unit container" id="ins_unit">
         <h3 class="titles">ΟΔΗΓΙΕΣ</h3>
         <br>
@@ -649,9 +674,11 @@
         </p>
     </div>
 
+    <!-- Forum - login/register box -->
     <div class="unit container" id="forums_unit">
         <h3 class="titles">FORUM</h3>
         <br>
+        <!-- Introduction text -->
         <div class="card" id="card_forum">
             <div class="card-body">
                 <p class="card-text" style="text-align: center;">
@@ -662,6 +689,7 @@
             </div>
         </div>
 
+        <!-- Login/Register box -->
         <div id="logreg-forms">
             <form class="form-signin" id="form-signin">
                 <h3 class="mb-3" style="text-align: center">Sign in</h3>
@@ -752,6 +780,7 @@
 
     </div>
 
+    <!-- Cookies/Privacy pop-up -->
     <div id="cookies" class="toast fade show fixed-bottom" role="alert" aria-live="assertive" aria-atomic="true"
         style="display:none;">
         <div class="toast-header">
@@ -771,13 +800,13 @@
         </div>
     </div>
 
-
+    <!-- Footer -->
     <div class="card" id="footer_unit" style="background-color: #ebd89b;">
         <div class="card-footer text-center">
             <span>This Website is created by: <a href="https://github.com/dejvidB" target="_blank">dejvidB</a> and <a
                     href="https://github.com/tech-gian" target="_blank">tech-gian</a></span>
             <p>Contact Info</p>
-            <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:mail@dithub.gr">mail@dithub.gr</a></p>
+            <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:dithub.info@gmail.com">dithub.info@gmail.com</a></p>
             Για οποιαδήποτε ερώτηση ή πρόταση βελτίωσης της ιστοσελίδας μην διστάσετε να μας στείλετε.<br>
             Επισημαίνουμε ότι όλες οι ενημερώσεις που γίνονται σε αυτό το site δεν αποτελούν επίσημη ενημέρωση
             από το τμήμα, όπως αντίστοιχα οι περιγραφές μαθημάτων αποτελούν προσωπικές μας απόψεις.

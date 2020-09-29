@@ -1,16 +1,20 @@
+/****************************/
+/* CSS rules for forum.html */
+/****************************/
+
 .container #teams {
     background-color: #fff2d6;
     border: 2px solid #524f4f;
     border-radius: 10px;
 
-    max-height: 90vh;              /* or just height instead of max-height */
+    max-height: 90vh;
     overflow: auto;
 }
 
 .container #chat {
     background-color: #e9d8b5;
 
-    max-height: 90vh;             /* or just height instead of max-height */
+    max-height: 90vh;
     border: 2px solid #524f4f;
     border-radius: 10px;
 }

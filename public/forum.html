@@ -1,3 +1,7 @@
+<!------------------------------>
+<!-- Main html page for Forum -->
+<!------------------------------>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -17,6 +21,7 @@
 </head>
 
 <body>
+    <!-- Invalid sign in when sending a message -->
     <div class="modal" id="login_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
@@ -50,6 +55,7 @@
             </div>
         </div>
     
+        <!-- Links for each chapter of homepage -->
         <a id="forums" href="./index.html#forums_unit"><i class="fa fa-comments fa-lg" aria-hidden="true"></i> FORUM</a>
         <a id="ins" href="./index.html#ins_unit"><i class="fa fa-info fa-lg" aria-hidden="true"></i> ΟΔΗΓΙΕΣ</a>
         <a id="sites" href="./index.html#sites_unit"><i class="fa fa-globe fa-lg" aria-hidden="true"></i> ΧΡΗΣΙΜΑ SITES</a>
@@ -99,8 +105,7 @@
         </div>
     </nav>
 
-    <!-- Chat -->
-
+    <!-- Forum - Chat -->
     <div class="container">
         <p id="collapse-mobile">
             <a id="teams_collapse_btn" class="btn btn-primary" type="button">
@@ -132,20 +137,15 @@
                 </div>
 
                 <!-- Teams -->
+                <!-- Everything empty, is being filled from backend -->
                 <p>
-
-                    <!-- In the future can become list-group with badges -->
                 <ul class="list-group" id="teams_list">
-                    <!-- ADD any other team you think -->
-
-                    <!-- TODO: link to pop-up the corresponding chat -->
                 </ul>
                 </p>
 
             </div>
             <div class="col-md-9 collapse" id="chat">
                 <h3 class="text-center">Chat</h3>
-                <!-- TODO: Messages -->
 
                 <div class="card" id="main-window" style="max-height:80% !important;">
                     <div class="alert alert-success text-center" role="alert" id="select_team">
