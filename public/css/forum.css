@@ -1,0 +1,131 @@
+.container #teams {
+    background-color: #fff2d6;
+    border: 2px solid #524f4f;
+    border-radius: 10px;
+
+    max-height: 90vh;              /* or just height instead of max-height */
+    overflow: auto;
+}
+
+.container #chat {
+    background-color: #e9d8b5;
+
+    max-height: 90vh;             /* or just height instead of max-height */
+    border: 2px solid #524f4f;
+    border-radius: 10px;
+}
+
+.btn:not(.del_msg_btn):not(#user_con) {
+    background-color: #62d7f5;
+    color: black;
+    border: solid 1px #285b68;
+}
+
+.btn-danger {
+    border: solid 1px #6e1c19;
+    float: right;
+    margin-left: 1%;
+}
+
+.container {
+    min-width: 99% !important;
+}
+
+#main_row {
+    min-height: 90vh !important;
+    max-height: 90vh !important;
+}
+
+#add_bar {
+    margin-top: 2%;
+}
+
+#chat .input-group {
+    position: absolute;
+    bottom: 0;
+    right: 1%;
+    width: 98%;
+    margin-bottom: 1%;
+}
+
+#teams li:hover {
+    cursor: pointer;
+}
+
+@media screen and (min-width: 768px) {
+    body {
+        overflow-y: hidden;
+    }
+    #teams, #chat {
+        display: block;
+    }
+    #collapse-mobile {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .container {
+        margin-top: 15px !important;
+    }
+    #replying {
+        display: none;
+    }
+}
+
+.col-md-9 {
+    padding-right: 2px;
+    padding-left: 2px;
+}
+
+.card-body {
+    padding: 1rem !important;
+}
+
+#main-window {
+    height: 80%;
+    background-color: #f0eeeb;
+}
+
+#main-window .card-title {
+    text-align: left;
+}
+
+.message-op {
+    background-color: #b7d4eb;
+}
+
+.comment {
+    background-color: #ebf3ff;
+    border-color: black;
+    display: table;
+}
+
+.message-self {
+    background-color: #c6e5ff;
+}
+
+#display_messages {
+    height: 80%;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+#display_messages .row {
+    margin-bottom: 10px;
+}
+
+.comment {
+    margin-bottom: 5px;
+}
+
+.highlight {
+    transform: scale(1.1);
+    background-color: yellow !important;
+    color: purple !important;
+    border: solid 1px #285b68;
+}
+
+.highlight_message {
+    border: 2px solid purple;
+}

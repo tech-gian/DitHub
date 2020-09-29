@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>DitHub - Μαθήματα, Χρήσιμα Sites, Οδηγίες & Forum</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <script>
+        function checkLoginState() {               // Called when a person is finished with the Login Button.
+            FB.getLoginStatus(function (res) {   // See the onlogin handler
+                console.log(res);
+                $.ajax({
+                    url: "/api/users/facebook/token",
+                    type: 'POST',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify({ "access_token": res.authResponse.accessToken }),
+                    success: (res) => {
+                        $("#success").removeClass("d-none");
+                        sessionStorage.setItem("token", res.token);
+                        sessionStorage.setItem("u_id", res.u_id);
+                        window.location.replace("./forum.html");
+                    },
+                    error: (res) => {
+                        var resp = res;
+                        $("#user_exists").removeClass("d-none");
+                    }
+                });
+            });
+        }
+
+        window.fbAsyncInit = function () {
+            FB.init({
+                cookie: true,                       // Enable cookies to allow the server to access the session.
+                xfbml: true,                        // Parse social plugins on this webpage.
+                version: 'v8.0'                     // Use this Graph API version for this call.
+            });
+        };
+    </script>
+    <!-- Navbar -->
+    <nav class="d-none d-md-block navbar-pc">
+        <a id="home" href="./index.html"><i class="fa fa-home fa-lg"></i> DITHUB</a>
+
+        <div class="dropdown user_con">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="user_con" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+                <i class="fa fa-user" aria-hidden="true"></i> <span class="user_name"></span>
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenu">
+                <a class="dropdown-item logout" href="#"><i class="fa fa-sign-out"></i>
+                    Logout</a>
+            </div>
+        </div>
+
+        <a id="forums" href="#forums_unit"><i class="fa fa-comments fa-lg" aria-hidden="true"></i> FORUM</a>
+        <a id="ins" href="#ins_unit"><i class="fa fa-info fa-lg" aria-hidden="true"></i> ΟΔΗΓΙΕΣ</a>
+        <a id="sites" href="#sites_unit"><i class="fa fa-globe fa-lg" aria-hidden="true"></i> ΧΡΗΣΙΜΑ SITES</a>
+        <a id="lessons" href="#lessons_unit"><i class="fa fa-book fa-lg" aria-hidden="true"></i> ΜΑΘΗΜΑΤΑ</a>
+    </nav>
+
+    <nav class="navbar navbar-expand-md fixed-top navbar-mobile navbar-inverse bg-inverse d-md-none">
+        <!-- Brand -->
+        <a id="home" href="./index.html" class="navbar-brand">DITHUB</a>
+
+        <!-- Toggler/collapsibe Button -->
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar"
+            style="border: 1px solid #007bff;">
+            <span class="fa fa-bars" style="color: #007bff;"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a id="lessons" href="#lessons_unit" class="nav-link"><i class="fa fa-book fa-lg"
+                            aria-hidden="true"></i> ΜΑΘΗΜΑΤΑ</a>
+                </li>
+                <li class="nav-item">
+                    <a id="sites" href="#sites_unit" class="nav-link"><i class="fa fa-globe fa-lg"
+                            aria-hidden="true"></i> ΧΡΗΣΙΜΑ SITES</a>
+                </li>
+                <li class="nav-item">
+                    <a id="ins" href="#ins_unit" class="nav-link"><i class="fa fa-info fa-lg"
+                            aria-hidden="true"></i>&nbsp;&nbsp; ΟΔΗΓΙΕΣ</a>
+                </li>
+                <li class="nav-item">
+                    <a id="forums" href="#forums_unit" class="nav-link"><i class="fa fa-comments fa-lg"
+                            aria-hidden="true"></i> FORUM</a>
+                </li>
+                <li class="nav-item dropdown user_con">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown"
+                        aria-haspopup="true" aria-expanded="false">
+                        <i class="fa fa-user fa-lg" aria-hidden="true"></i>&nbsp; <span class="user_name"></span>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="user_con">
+                        <a class="dropdown-item logout" href="#"><i class="fa fa-sign-out"></i>
+                            Logout</a>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <img class="img-thumbnail d-none d-md-block" id="left-img" src="images/dit.jpg">
+    <img class="img-thumbnail d-none d-md-block" id="right-img" src="images/dit.jpg">
+
+    <div class="unit container" id="main">
+        <!-- Purpose -->
+        <div class="jumbotron">
+            <p class="text-center" style="font-size: 1.25em;">Καλωσορίσατε στο DitHub</p>
+            <hr class="my-2">
+            <p>Αυτό το site έχει δημιουργηθεί για την εξυπηρέτηση των φοιτητών του τμήματος
+                Πληροφορικής
+                και Τηλεπικοινωνιών.
+                Είναι αρκετά χρήσιμο για όλους τους φοιτητές του τμήματος αλλά θα βοηθήσει ιδιαίτερα
+                τους πρωτοετείς, προσφέροντάς τους όλες τις πληροφορίες που χρειάζονται.
+            </p>
+        </div>
+
+        <!-- Announcements -->
+        <div id="announcements">
+            <h2 class="text-center">Ανακοινώσεις</h2>
+            <br>
+            <ul class="list-group">
+
+            </ul>
+            <p>
+            <div class="d-flex">
+                <ul class="pagination mx-auto">
+                    <li class="page-item previous_page">
+                        <a class="page-link" href="#!" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            </p>
+        </div>
+    </div>
+
+    <div class="unit container" id="lessons_unit">
+        <h3 class="titles">ΜΑΘΗΜΑΤΑ - Α' εξαμήνου 2020/21</h3>
+        <br>
+        <div class="accordion" id="lessons_accordion">
+            <div class="card">
+                <div class="card-header" id="ip" data-toggle="collapse" data-target="#ip_desc" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button">
+                            Εισαγωγή στον Προγραμματισμό
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="ip_desc" class="collapse" aria-labelledby="ip" data-parent="#lessons_accordion">
+                    <div class="card-body">
+                        Ένα από τα πιο σημαντικά μαθήματα της σχολής και πολύ βασικό για όλη την υπόλοιπη σχολή.
+                        Πρέπει να δοθεί
+                        βάση και να μελετηθεί σε βάθος
+                        και όχι απλά ένα γρήγορο πέρασμα απλά για να περαστεί. Πέρα από την θεωρία του μαθήματος, θα
+                        δωθούν και
+                        4 εργασίες στην διάρκεια του εξαμήνου, οι οποίες
+                        καλό είναι να γίνουν όσο το δυνατόν καλύτερα. Ακόμα, το μάθημα αυτό έχει και υποχρεωτικό
+                        εργαστήριο, το οποίο ακόμα δεν γνωρίζουμε τον τρόπο διεξαγωγής του. Συζητούνται αρκετοί πιθανοί
+                        τρόποι και θα υπάρξει σχετική ενήμερωση όταν αποφασιστεί.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="discrete" data-toggle="collapse" data-target="#discrete_desc"
+                    aria-expanded="false" aria-controls="collapseTwo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Διακριτά Μαθηματικά
+                        </button>
+                    </h2>
+                </div>
+                <div id="discrete_desc" class="collapse" aria-labelledby="discrete" data-parent="#lessons_accordion">
+                    <div class="card-body">
+                        Από τον τίτλο κιόλας καταλαβαίνουμε ότι αναφέρεται σε μαθηματικά. Μάθημα το οποίο θέλει
+                        αρκετό διάβασμα στη
+                        θεωρία και συμμετοχή/επαφή με το φροντιστήριο,
+                        στο οποίο λύνονται αρκετές και σημαντικές ασκήσεις. Σαν γνώσεις, για μετέπειτα μαθήματα της
+                        σχολής, θα
+                        πρέπει να δοθεί βάση στην απαρίθμηση, πολυπλοκότητα και πιθανότητες.
+                        Από εκεί και πέρα, για να περαστεί το μάθημα χρειάζεται καθολική γνώση της ύλης.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="linear" data-toggle="collapse" data-target="#linear_desc"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Γραμμική Άλγεβρα
+                        </button>
+                    </h2>
+                </div>
+                <div id="linear_desc" class="collapse" aria-labelledby="linear" data-parent="#lessons_accordion">
+                    <div class="card-body">
+                        Άλλο ένα μάθημα σχετικό με μαθηματικά. Ο τελικός βαθμός βασίζεται πλήρως στην γραπτή εξέταση
+                        στο τέλος
+                        του εξαμήνου. Η ύλη δεν είναι τεράστια. Με ένα συστηματικό διάβασμα
+                        κατά την διάρκεια του εξαμήνου και μια καλή επανάληψη πριν την εξέταση, μπορεί να περαστεί.
+                        Στην ύλη του περιλαμβάνονται αρκετά θέματα που είναι ιδιαίτερα χρήσιμα ακόμα και σε
+                        προγραμματιστικά μαθήματα.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="logic" data-toggle="collapse" data-target="#logic_desc"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Λογική Σχεδίαση
+                        </button>
+                    </h2>
+                </div>
+                <div id="logic_desc" class="collapse" aria-labelledby="logic" data-parent="#lessons_accordion">
+                    <div class="card-body">
+                        Μάθημα το οποίο θέτει τις βάσεις για την κατανόηση του υπολογιστή σε βάθος. Ουσιαστικά (όχι
+                        πρακτικά)
+                        αποτελεί προαπαιτούμενο για την Αρχιτεκτονική Υπολογιστών Ι (2ο εξάμηνο)
+                        και ασχολείται με κυκλώματα, καθώς αναλύει όλες τις αρχές που πρέπει να έχει κάθε επιστήμονας
+                        πληροφορικής.
+                        Είναι κάτι σαν την "αλφαβήτα" της πληροφορικής και πρέπει να δοθεί
+                        σημασία σε αυτά τα βασικά στοιχεία.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="logiclab" data-toggle="collapse" data-target="#logiclab_desc"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Λογική Σχεδίαση (Εργαστήριο) - <mark>Προαιρετικό</mark>
+                        </button>
+                    </h2>
+                </div>
+                <div id="logiclab_desc" class="collapse" aria-labelledby="logiclab" data-parent="#lessons_accordion">
+                    <div class="card-body">
+                        Σχετίζεται με την Λογική Σχεδίαση και συνδιάζεται με ένα πιο πρακτικό κομμάτι. Το μάθημα
+                        γίνεται για 1
+                        δίωρο την εβδομάδα
+                        στο εργαστήριο. Το μάθημα στρέφεται κυρίως γύρω απο την γλώσσα περιγραφής υλικού VHDL και
+                        ασχολείται με
+                        την συγγραφή απλών προγραμμάτων για την κατανόηση της θεωρίας και του
+                        περιβάλλοντος του Vivado.
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="intro" data-toggle="collapse" data-target="#intro_desc"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Εισαγωγή στην Πληροφορική και στις Τηλεπικοινωνίες
+                        </button>
+                    </h2>
+                </div>
+                <div id="intro_desc" class="collapse" aria-labelledby="intro" data-parent="#lessons_accordion">
+                    <div class="card-body">
+                        Απλό μάθημα το οποίο ασχολείται με διάφορα αντικείμενα. Προσπαθεί να βάλει τον πρωτοετή στην
+                        έννοια και
+                        στην λογική της πληροφορικής. Το μάθημα (βαθμολογικά) χωρίζεται σε
+                        κάποιους τομείς. Υπάρχει το κομμάτι της γραπτής εξέτασης, το κομμάτι συμπλήρωσης online
+                        ερωτήσεων για
+                        την κατανόηση της θεωρίας και το κομμάτι υλοποίησης εργασίων.
+                        Οι καθηγητές θα εξηγήσουν καλύτερα την διαδικασία βαθμολόγησης, καθώς και το μέρος που
+                        καταλαμβάνουν
+                        στον τελικό βαθμό.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="unit container" id="sites_unit">
+        <h3 class="titles">SITES</h3>
+        <br>
+        <div class="accordion" id="sites_accordion">
+            <div class="card">
+                <div class="card-header" id="general" data-toggle="collapse" data-target="#general_desc"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button">
+                            Γενικά
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="general_desc" class="collapse" aria-labelledby="general" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://www.di.uoa.gr" target="_blank">https://www.di.uoa.gr</a>
+                                    </td>
+                                    <td>Κύριο site του τμήματος. Καθημερινή ανανέωση για ανακοινώσεις και ό,τι άλλο
+                                        χρειάζεται να βρεθεί</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="https://eclass.uoa.gr" target="_blank">https://eclass.uoa.gr</a>
+                                    </td>
+                                    <td>Site για την η-τάξη. Περιέχει όλα τα μαθήματα της σχολής</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td><a href="https://my-studies.uoa.gr"
+                                            target="_blank">https://my-studies.uoa.gr</a></td>
+                                    <td>Site για δήλωση μαθημάτων και ενημέρωση για προβιβάσιμα μαθήματα και
+                                        τελικούς βαθμούς</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">4</th>
+                                    <td><a href="https://webmail.noc.uoa.gr"
+                                            target="_blank">https://webmail.noc.uoa.gr</a></td>
+                                    <td>Login site για το πανεπιστημιακό email</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">5</th>
+                                    <td><a href="https://delos.uoa.gr/opendelos"
+                                            target="_blank">https://delos.uoa.gr/opendelos</a></td>
+                                    <td>Site καταγραφής και live μετάδοσης μαθημάτων. Αν ζητηθεί κωδικός: live4di
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">6</th>
+                                    <td><a href="http://www.noc.uoa.gr" target="_blank">http://www.noc.uoa.gr</a>
+                                    </td>
+                                    <td>Κέντρο λειτουργίας και διαχείρισης Δικτύου</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">7</th>
+                                    <td><a href="https://www.chatzi.org/dit-schedule/20-21/timetable_winter2021.pdf" target="_blank">dit-schedule</a>
+                                    </td>
+                                    <td>Πλήρες πρόγραμμα χειμερινού εξαμήνου 2020/2021 (μπλε για πρωτοετείς)</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">8</th>
+                                    <td><a href="https://www.di.uoa.gr/sites/default/files/documents/EleutheraMathimata2020-21.pdf?fbclid=IwAR1z216DdOblvKRKOzp2IiXAA0RL6VKuFWhhRmpHCfRWRTerz2rEw_N6TYQ" target="_blank">ελεύθερα_μαθήματα</a>
+                                    </td>
+                                    <td>Λίστα ελεύθερων μαθημάτων 2020/2021</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="updating" data-toggle="collapse" data-target="#updating_desc"
+                    aria-expanded="true" aria-controls="collapseOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button">
+                            Φοιτητική ενημέρωση
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="updating_desc" class="collapse" aria-labelledby="updating" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://www.foititikanea.gr" target="_blank">https://www.foititikanea.gr</a>
+                                    </td>
+                                    <td>Site με άρθρα σχετικά με οτιδήποτε απασχολεί όλους τους φοιτητές</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="https://www.minedu.gov.gr" target="_blank">https://www.minedu.gov.gr</a>
+                                    </td>
+                                    <td>Site του Υπουργείου Παιδείας</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="ip" data-toggle="collapse" data-target="#ip_sites" aria-expanded="true"
+                    aria-controls="collapseOne">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link" type="button">
+                            Εισαγωγή στον Προγραμματισμό
+                        </button>
+                    </h2>
+                </div>
+
+                <div id="ip_sites" class="collapse" aria-labelledby="ip" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://di.uoa.gr/~ip" target="_blank">https://di.uoa.gr/~ip</a>
+                                    </td>
+                                    <td>Site μαθήματος. Περιέχει διαφάνειες, εργασίες, εργαστήρια κλπ</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="https://lists.di.uoa.gr" target="_blank">https://lists.di.uoa.gr</a>/
+                                    </td>
+                                    <td>Forum μαθήματος. Γίνονται συζητήσεις για εργασίες και κάποιες ανακοινώσεις
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td><a href="https://eclass.uoa.gr/courses/D8"
+                                            target="_blank">https://eclass.uoa.gr/courses/D8</a></td>
+                                    <td>Σελίδα μαθήματος στο eclass (δεν χρησιμοποιείται)</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="discrete" data-toggle="collapse" data-target="#discrete_sites"
+                    aria-expanded="false" aria-controls="collapseTwo">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Διακριτά Μαθηματικά
+                        </button>
+                    </h2>
+                </div>
+                <div id="discrete_sites" class="collapse" aria-labelledby="discrete" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://eclass.uoa.gr/courses/D268"
+                                            target="blank">https://eclass.uoa.gr/courses/D268</a></td>
+                                    <td>Σελίδα μαθήματος στο eclass. Περιέχει σημειώσεις/διαφάνειες</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="https://www.slader.com/textbook/9780073383095-discrete-mathematics-with-applications-7th-edition"
+                                            target="_blank">https://www.slader.com/textbook/9780073383095-discrete-mathematics-with-applications-7th-edition</a>
+                                    </td>
+                                    <td>Απαντήσεις ασκήσεων βιβλίου Rosen</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="linear" data-toggle="collapse" data-target="#linear_sites"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Γραμμική Άλγεβρα
+                        </button>
+                    </h2>
+                </div>
+                <div id="linear_sites" class="collapse" aria-labelledby="linear" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://eclass.uoa.gr/courses/MATH256"
+                                            target="blank">https://eclass.uoa.gr/courses/MATH256</a></td>
+                                    <td>Σελίδα μαθήματος στο eclass. Περιέχει σημειώσεις/διαφάνειες</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="logic" data-toggle="collapse" data-target="#logic_sites"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Λογική Σχεδίαση
+                        </button>
+                    </h2>
+                </div>
+                <div id="logic_sites" class="collapse" aria-labelledby="logic" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://eclass.uoa.gr/courses/D13"
+                                            target="blank">https://eclass.uoa.gr/courses/D13</a></td>
+                                    <td>Σελίδα μαθήματος στο eclass. Περιέχει σημειώσεις/διαφάνειες</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="logiclab" data-toggle="collapse" data-target="#logiclab_sites"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Λογική Σχεδίαση (Εργαστήριο) - <mark>Προαιρετικό</mark>
+                        </button>
+                    </h2>
+                </div>
+                <div id="logiclab_sites" class="collapse" aria-labelledby="logiclab" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://eclass.uoa.gr/courses/DI375"
+                                            target="blank">https://eclass.uoa.gr/courses/DI375</a></td>
+                                    <td>Σελίδα μαθήματος στο eclass. Περιέχει σημειώσεις/διαφάνειες</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="https://www.xilinx.com/support/download.html" target="_blank">Vivado
+                                            download</a></td>
+                                    <td>Site για download του προγραμμάτος που χρησιμοποιείται στο εργαστήριο</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="intro" data-toggle="collapse" data-target="#intro_sites"
+                    aria-expanded="false" aria-controls="collapseThree">
+                    <h2 class="mb-0">
+                        <button class="btn btn-link collapsed" type="button">
+                            Εισαγωγή στην Πληροφορική και στις Τηλεπικοινωνίες
+                        </button>
+                    </h2>
+                </div>
+                <div id="intro_sites" class="collapse" aria-labelledby="intro" data-parent="#sites_accordion">
+                    <div class="card-body">
+                        <table class="table table-responsive">
+                            <thread>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sites</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thread>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td><a href="https://eclass.uoa.gr/courses/D253"
+                                            target="blank">https://eclass.uoa.gr/courses/D253</a></td>
+                                    <td>Σελίδα μαθήματος στο eclass. Περιέχει σημειώσεις/διαφάνειες</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td><a href="https://lcl.di.uoa.gr" target="_blank">https://lcl.di.uoa.gr</a>
+                                    </td>
+                                    <td>Site για επίλυση ασκήσεων (ερωτήσεων πολλαπλής κλπ) για το 1 μέρος του
+                                        μαθήματος</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="unit container" id="ins_unit">
+        <h3 class="titles">ΟΔΗΓΙΕΣ</h3>
+        <br>
+        <ul class="list-group" style="text-align: justify;">
+
+        </ul>
+        <p aria-label="Instructions navigation">
+        <div class="d-flex">
+            <ul class="pagination mx-auto">
+                <li class="page-item previous_page">
+                    <a class="page-link" href="#!" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        </p>
+    </div>
+
+    <div class="unit container" id="forums_unit">
+        <h3 class="titles">FORUM</h3>
+        <br>
+        <div class="card" id="card_forum">
+            <div class="card-body">
+                <p class="card-text" style="text-align: center;">
+                    <img class="img-fluid" id="forum-img" src="./images/forum/forum_main.png" alt="Forum">
+                    Για να μεταβείτε σε μια read-only έκσοδη του forum-chat μεταβείτε εδώ:
+                    <a href="forum.html">Forum</a> , αλλιώς εγγραφείτε/συνδεθείτε στο παρακάτω πλαίσιο.
+                </p>
+            </div>
+        </div>
+
+        <div id="logreg-forms">
+            <form class="form-signin" id="form-signin">
+                <h3 class="mb-3" style="text-align: center">Sign in</h3>
+                <div class="social-login">
+                    <div class="fb-login-button" data-size="medium" data-button-type="login_with" data-layout="default"
+                        data-auto-logout-link="false" data-use-continue-as="false" data-width=""
+                        data-onlogin="checkLoginState()" data-scope="public_profile, email"></div>
+                    </fb:login-button>
+                </div>
+                <p style="text-align:center"> OR </p>
+                <input type="text" id="inputUsername" class="form-control" placeholder="Username" required
+                    autocomplete="on">
+                <input type="password" id="inputPassword" class="form-control" placeholder="Password" required
+                    autocomplete="on">
+
+                <div id="wrong_credentials" class="alert alert-danger d-none" role="alert">
+                    <strong>Wrong email or password.</strong> Try again.
+                </div>
+
+                <div id="success" class="alert alert-success d-none" role="alert">
+                    <strong>You have successfully logged in.</strong> Redirecting to forum.
+                </div>
+
+                <button class="btn btn-success btn-block" type="submit"><i class="fa fa-sign-in"></i> Sign
+                    in</button>
+                <a href="#" id="forgot_pswd">Forgot password?</a>
+                <hr>
+                <button class="btn btn-primary btn-block" type="button" id="btn-signup"><i class="fa fa-user-plus"></i>
+                    Sign up New Account</button>
+            </form>
+
+            <form action="/reset/password/" class="form-reset">
+                <input type="email" id="resetEmail" class="form-control" placeholder="Email address" required>
+                <button class="btn btn-primary btn-block" type="submit">Reset Password</button>
+                <a href="#" id="cancel_reset"><i class="fa fa-angle-left"></i> Back</a>
+            </form>
+
+            <form class="form-signup" id="form-signup">
+                <h3 class="mb-3" style="text-align: center">Sign up</h3>
+                <div class="social-login">
+                    <div class="fb-login-button" data-size="medium" data-button-type="continue_with"
+                        data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" data-width=""
+                        data-onlogin="checkLoginState()" data-scope="public_profile, email">
+                    </div>
+                </div>
+
+                <p style="text-align:center">OR</p>
+
+                <input type="text" id="username" class="form-control" placeholder="Username" required>
+                <input type="email" id="user-email" class="form-control" placeholder="Email address" required>
+                <input type="password" id="user-pass" class="form-control" placeholder="Password" required>
+                <input type="password" id="user-repeatpass" class="form-control" placeholder="Repeat Password" required>
+
+                <div id="passwords_match" class="alert alert-danger d-none" role="alert">
+                    <strong>Passwords don't match.</strong>
+                </div>
+
+                <div id="user_exists" class="alert alert-danger d-none" role="alert">
+                    <strong>Username or email already exists.</strong> Try again.
+                </div>
+
+                <div id="success_signup" class="alert alert-success d-none" role="alert">
+                    <strong>You have successfully registered.</strong> Redirecting to forum...
+                </div>
+
+                <button class="btn btn-primary btn-block" type="submit"><i class="fa fa-user-plus"></i> Sign
+                    Up</button>
+                <a href="#" id="cancel_signup"><i class="fa fa-angle-left"></i> Back</a>
+            </form>
+            <br>
+
+        </div>
+
+        <div id="has_logged_in" class="d-none">
+            <br>
+            <h4 style="text-align: center;">Logged in as: <em class="user_name"></em></h4>
+            <br>
+            <p style="text-align: center;">
+                Έχετε συνδεθεί <b>επιτυχώς</b> στον λογαριασμό σας.<br>
+                Αν θέλετε να συμμετέχετε στο forum πατήστε το link: <a href="./forum.html"
+                    style="font-size: 24px;">Forum</a><br>
+                Αλλιώς μπορείτε να αποσυνδεθείτε αν πατήσετε εδώ:<br><br>
+                <button class="btn btn-primary" onclick="$('#logout').click();"><i class="fa fa-sign-out"></i>
+                    Logout</button>
+            </p>
+            <br>
+        </div>
+
+    </div>
+
+    <div id="cookies" class="toast fade show fixed-bottom" role="alert" aria-live="assertive" aria-atomic="true"
+        style="display:none;">
+        <div class="toast-header">
+            <strong class="mr-auto">Cookies</strong>
+            <button type="button" class="ml-2 mb-1 close accept_cookies" data-dismiss="toast" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="toast-body">
+            Η ιστοσελίδα αυτή χρησιμοποιεί cookies για την καλύτερη εμπειρία στην περιήγησή σας.<br>
+            Λεπτομέρειες για τα δεδομένα που συλλέγουμε, καθώς και πώς τα διαχειριζόμαστε μπορείτε
+            να βρείτε παρακάτω.
+            <button type="button" class="btn btn-info btn-sm float-right" onclick="location.href='./cookies.html'">Learn
+                More</button>
+            <button type="button" class="btn btn-info btn-sm float-right accept_cookies"
+                style="margin-right: 10px; width: 50px;">OK</button>
+        </div>
+    </div>
+
+
+    <div class="card" id="footer_unit" style="background-color: #ebd89b;">
+        <div class="card-footer text-center">
+            <span>This Website is created by: <a href="https://github.com/dejvidB" target="_blank">dejvidB</a> and <a
+                    href="https://github.com/tech-gian" target="_blank">tech-gian</a></span>
+            <p>Contact Info</p>
+            <p><i class="fa fa-envelope" aria-hidden="true"></i> <a href="mailto:mail@dithub.gr">mail@dithub.gr</a></p>
+            Για οποιαδήποτε ερώτηση ή πρόταση βελτίωσης της ιστοσελίδας μην διστάσετε να μας στείλετε.<br>
+            Επισημαίνουμε ότι όλες οι ενημερώσεις που γίνονται σε αυτό το site δεν αποτελούν επίσημη ενημέρωση
+            από το τμήμα, όπως αντίστοιχα οι περιγραφές μαθημάτων αποτελούν προσωπικές μας απόψεις.
+        </div>
+    </div>
+
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+        integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+        integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+        crossorigin="anonymous"></script>
+
+    <div id="fb-root"></div>
+    <script async defer crossorigin="anonymous"
+        src="https://connect.facebook.net/el_GR/sdk.js#xfbml=1&version=v8.0&appId=240315577362460&autoLogAppEvents=1"
+        nonce="Cr27JPCP"></script>
+
+    <script src="./js/common.js"></script>
+    <script src="./js/index.js"></script>
+</body>
+
+</html>

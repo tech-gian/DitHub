@@ -1,0 +1,11 @@
+p {
+    font-size: large;
+}
+
+body {
+    background-color: white;
+}
+
+.container {
+    font-weight: 500 !important;
+}
