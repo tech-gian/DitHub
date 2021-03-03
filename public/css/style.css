@@ -314,6 +314,10 @@ h3 {
         content: 'Google+';
     }
 
+    .card-header {
+        text-align: center;
+    }
+
 }
 
 #footer_unit a {
